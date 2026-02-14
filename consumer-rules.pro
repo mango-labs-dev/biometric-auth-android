@@ -1,0 +1,4 @@
+-keep class dev.mango.labs.auth.biometric.BiometricAuthManager { *; }
+-keep class dev.mango.labs.auth.biometric.BiometricAuthManager$Builder { *; }
+-keep interface dev.mango.labs.auth.biometric.BiometricCallback { *; }
+-keep class dev.mango.labs.auth.biometric.BiometricUtils { *; }

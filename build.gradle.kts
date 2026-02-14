@@ -1,14 +1,16 @@
 plugins {
   alias(libs.plugins.android.library)
   alias(libs.plugins.jetbrains.kotlin.android)
+  `maven-publish`
 }
 
 android {
   namespace = "dev.mango.labs.auth.biometric"
-  compileSdk = rootProject.extra["maxVersion"] as Int
+  compileSdk = 36
 
   defaultConfig {
-    minSdk = rootProject.extra["minVersion"] as Int
+    minSdk = 23
+    consumerProguardFiles("consumer-rules.pro")
   }
 
   buildTypes {
@@ -26,13 +28,36 @@ android {
       jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
   }
+  testOptions {
+    unitTests.isIncludeAndroidResources = true
+  }
+  publishing {
+    singleVariant("release") {
+      withSourcesJar()
+    }
+  }
 }
 
 dependencies {
   implementation(libs.androidx.core.ktx)
-  implementation(libs.androidx.appcompat)
-  implementation(libs.material)
-
-  // biometric
   implementation(libs.androidx.biometric)
+
+  testImplementation(libs.junit)
+  testImplementation(libs.mockk)
+  testImplementation(libs.robolectric)
+  testImplementation(libs.androidx.test.core)
+}
+
+publishing {
+  publications {
+    register<MavenPublication>("release") {
+      groupId = "dev.mango.labs"
+      artifactId = "biometric-auth"
+      version = "1.0.0"
+
+      afterEvaluate {
+        from(components["release"])
+      }
+    }
+  }
 }
