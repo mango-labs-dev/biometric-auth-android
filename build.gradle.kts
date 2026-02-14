@@ -53,10 +53,20 @@ publishing {
     register<MavenPublication>("release") {
       groupId = "dev.mango.labs"
       artifactId = "biometric-auth"
-      version = "1.0.0"
+      version = providers.gradleProperty("LIB_VERSION").get()
 
       afterEvaluate {
         from(components["release"])
+      }
+    }
+  }
+  repositories {
+    maven {
+      name = "GitHubPackages"
+      url = uri("https://maven.pkg.github.com/mango-labs-dev/biometric-auth-android")
+      credentials {
+        username = providers.gradleProperty("gpr.user").orElse(providers.environmentVariable("GITHUB_ACTOR")).get()
+        password = providers.gradleProperty("gpr.token").orElse(providers.environmentVariable("GITHUB_TOKEN")).get()
       }
     }
   }
